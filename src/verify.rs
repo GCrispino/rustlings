@@ -20,6 +20,7 @@ pub fn verify<'a>(
         .progress_chars("#>-")
     );
     bar.set_position(num_done as u64);
+    let mut _num_done = num_done;
     for exercise in exercises {
         let compile_result = match exercise.mode {
             Mode::Test => compile_and_test(exercise, RunMode::Interactive, verbose),
@@ -29,9 +30,10 @@ pub fn verify<'a>(
         if !compile_result.unwrap_or(false) {
             return Err(exercise);
         }
-        let percentage = num_done as f32 / total as f32 * 100.0;
+        let percentage = _num_done as f32 / total as f32 * 100.0;
         bar.set_message(format!("({:.1} %)", percentage));
         bar.inc(1);
+        _num_done += 1;
     }
     Ok(())
 }
